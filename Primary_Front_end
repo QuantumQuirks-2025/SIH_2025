@@ -1,0 +1,821 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Namma BMTC - Commuter Dashboard</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: url('https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1500&q=80') no-repeat center center fixed;
+            background-size: cover;
+            color: #333;
+        }
+        .header {
+            background: transparent;
+            box-shadow: none;
+            position: absolute;
+            top: 15px;
+            width: 100%;
+            z-index: 1000;
+        }
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        .profile-pic {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.15);
+            border: 1px solid rgba(255,255,255,0.3);
+            backdrop-filter: blur(10px);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            font-size: 18px;
+        }
+        .profile-pic:hover {
+            transform: scale(1.1);
+            background: rgba(255,255,255,0.25);
+        }
+        .lang-toggle {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+        .lang-btn {
+            background: #fff;
+            border: 1px solid #667eea;
+            color: #667eea;
+            border-radius: 6px;
+            padding: 5px 12px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: background 0.2s, color 0.2s;
+        }
+        .lang-btn.active, .lang-btn:hover {
+            background: #667eea;
+            color: #fff;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background: rgba(255,255,255,0.92);
+            border-radius: 16px;
+            box-shadow: 0 2px 15px rgba(0,0,0,0.08);
+        }
+        .quick-actions {
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 25px;
+            box-shadow: 0 2px 15px rgba(0,0,0,0.08);
+        }
+        .quick-actions h2 {
+            margin-bottom: 20px;
+            color: #1e3c72;
+            font-size: 20px;
+        }
+        .actions-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+        }
+        .action-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: none;
+            font-size: 14px;
+            text-decoration: none;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+        }
+        .action-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+        }
+        .action-icon {
+            font-size: 24px;
+            margin-bottom: 5px;
+        }
+        .route-planner {
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 25px;
+            box-shadow: 0 2px 15px rgba(0,0,0,0.08);
+        }
+        .route-form {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        .form-group {
+            flex: 1;
+            min-width: 200px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #555;
+        }
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e1e5e9;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: border-color 0.3s ease;
+        }
+        .form-group input:focus, .form-group select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        .search-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 12px 30px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            align-self: flex-end;
+            height: fit-content;
+        }
+        .search-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+        .route-results {
+            display: none;
+        }
+        .route-card {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 15px;
+            border-left: 4px solid #667eea;
+        }
+        .route-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        .route-info {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
+        .route-badge {
+            background: #667eea;
+            color: white;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        .time-info {
+            font-size: 14px;
+            color: #666;
+        }
+        .route-steps {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+        .step-icon {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: #667eea;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+        }
+        .fare-calculator {
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 25px;
+            box-shadow: 0 2px 15px rgba(0,0,0,0.08);
+        }
+        .fare-form {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin-bottom: 15px;
+        }
+        .fare-result {
+            font-size: 18px;
+            color: #1e3c72;
+            font-weight: 600;
+            margin-top: 10px;
+        }
+        .live-tracking {
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 25px;
+            box-shadow: 0 2px 15px rgba(0,0,0,0.08);
+        }
+        .tracking-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .live-indicator {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #22c55e;
+            font-weight: 600;
+        }
+        .live-dot {
+            width: 8px;
+            height: 8px;
+            background: #22c55e;
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
+        .bus-list {
+            display: grid;
+            gap: 15px;
+        }
+        .bus-item {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        .bus-item:hover {
+            background: #e9ecef;
+            transform: translateX(5px);
+        }
+        .bus-info h4 {
+            color: #1e3c72;
+            margin-bottom: 5px;
+        }
+        .bus-route {
+            color: #666;
+            font-size: 14px;
+        }
+        .arrival-time {
+            text-align: right;
+        }
+        .eta {
+            font-weight: 600;
+            color: #22c55e;
+            font-size: 18px;
+        }
+        .distance {
+            color: #666;
+            font-size: 12px;
+        }
+        .recent-trips {
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 25px;
+            box-shadow: 0 2px 15px rgba(0,0,0,0.08);
+        }
+        .trip-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
+            border-bottom: 1px solid #f0f0f0;
+        }
+        .trip-item:last-child {
+            border-bottom: none;
+        }
+        .trip-details h4 {
+            color: #1e3c72;
+            margin-bottom: 5px;
+        }
+        .trip-date {
+            color: #666;
+            font-size: 14px;
+        }
+        @media (max-width: 768px) {
+            .container {
+                padding: 15px;
+            }
+            .route-form, .fare-form {
+                flex-direction: column;
+            }
+            .actions-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        .fade-in {
+            animation: fadeInUp 0.6s ease-out;
+        }
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            backdrop-filter: blur(5px);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+        }
+        .modal-content {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            max-width: 500px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .close-btn {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: #666;
+        }
+        .notification {
+            position: fixed;
+            top: 100px;
+            right: 20px;
+            background: #22c55e;
+            color: white;
+            padding: 15px 20px;
+            border-radius: 8px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            transform: translateX(400px);
+            transition: transform 0.3s ease;
+            z-index: 3000;
+        }
+        .notification.show {
+            transform: translateX(0);
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-content">
+            <div class="lang-toggle">
+                <button class="lang-btn active" onclick="setLang('en')" id="lang-en">English</button>
+                <button class="lang-btn" onclick="setLang('hi')" id="lang-hi">हिन्दी</button>
+                <button class="lang-btn" onclick="setLang('pa')" id="lang-pa">ਪੰਜਾਬੀ</button>
+            </div>
+            <div class="user-info">
+                <span id="welcome-text">Welcome, Commuter</span>
+                <div class="profile-pic" onclick="toggleProfileMenu()">👤</div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <div class="container">
+        <!-- Quick Actions -->
+        <div class="quick-actions fade-in">
+            <h2 id="quick-actions-title">Quick Actions</h2>
+            <div class="actions-grid">
+                <button class="action-card" onclick="showModal('schedule-modal')">
+                    <div class="action-icon">⏰</div>
+                    <div id="schedule-label">Schedule</div>
+                </button>
+                <button class="action-card" onclick="showModal('help-modal')">
+                    <div class="action-icon">❓</div>
+                    <div id="help-label">Help</div>
+                </button>
+            </div>
+        </div>
+
+        <!-- Route Planner -->
+        <div class="route-planner fade-in">
+            <h2 style="margin-bottom: 20px; color: #1e3c72;" id="plan-journey-title">Plan Your Journey</h2>
+            <div class="route-form">
+                <div class="form-group">
+                    <label for="from" id="from-label">From</label>
+                    <input type="text" id="from" placeholder="Enter source location" list="locations">
+                </div>
+                <div class="form-group">
+                    <label for="to" id="to-label">To</label>
+                    <input type="text" id="to" placeholder="Enter destination" list="locations">
+                </div>
+                <div class="form-group">
+                    <label for="departure-time" id="departure-label">Departure Time</label>
+                    <input type="time" id="departure-time">
+                </div>
+                <button class="search-btn" onclick="searchRoutes()" id="search-routes-btn">🔍 Search Routes</button>
+            </div>
+            <datalist id="locations">
+                <option value="Majestic Bus Station">
+                <option value="Electronic City">
+                <option value="Whitefield">
+                <option value="Koramangala">
+                <option value="HSR Layout">
+                <option value="Marathahalli">
+                <option value="Indiranagar">
+                <option value="JP Nagar">
+                <option value="BTM Layout">
+                <option value="Hebbal">
+                <option value="Banashankari">
+                <option value="Jayanagar">
+                <option value="KR Puram">
+                <option value="Silk Board">
+                <option value="Kempegowda International Airport">
+            </datalist>
+            <div class="route-results" id="route-results">
+                <!-- Routes will be populated here -->
+            </div>
+        </div>
+
+        <!-- Fare Calculator -->
+        <div class="fare-calculator fade-in">
+            <h2 style="margin-bottom: 20px; color: #1e3c72;" id="fare-calc-title">Fare Calculator</h2>
+            <div class="fare-form">
+                <div class="form-group">
+                    <label for="fare-from" id="fare-from-label">From</label>
+                    <input type="text" id="fare-from" placeholder="Enter source" list="locations">
+                </div>
+                <div class="form-group">
+                    <label for="fare-to" id="fare-to-label">To</label>
+                    <input type="text" id="fare-to" placeholder="Enter destination" list="locations">
+                </div>
+                <div class="form-group">
+                    <label for="fare-type" id="fare-type-label">Bus Type</label>
+                    <select id="fare-type">
+                        <option value="ordinary">Ordinary</option>
+                        <option value="ac">AC</option>
+                        <option value="volvo">Volvo</option>
+                    </select>
+                </div>
+                <button class="search-btn" onclick="calculateFare()" id="fare-calc-btn">Estimate Fare</button>
+            </div>
+            <div class="fare-result" id="fare-result"></div>
+        </div>
+
+        <!-- Live Tracking -->
+        <div class="live-tracking fade-in">
+            <div class="tracking-header">
+                <h2 style="color: #1e3c72;" id="live-tracking-title">Live Bus Tracking</h2>
+                <div class="live-indicator">
+                    <div class="live-dot"></div>
+                    <span id="live-updates-label">Live Updates</span>
+                </div>
+            </div>
+            <div class="bus-list">
+                <div class="bus-item">
+                    <div class="bus-info">
+                        <h4>Route 335E - Kempegowda Bus Station → Electronic City</h4>
+                        <div class="bus-route">Via Bannerghatta Road</div>
+                    </div>
+                    <div class="arrival-time">
+                        <div class="eta">3 min</div>
+                        <div class="distance">0.8 km away</div>
+                    </div>
+                </div>
+                <div class="bus-item">
+                    <div class="bus-info">
+                        <h4>Route 201 - Shivaji Nagar → Marathahalli</h4>
+                        <div class="bus-route">Via Indiranagar, Koramangala</div>
+                    </div>
+                    <div class="arrival-time">
+                        <div class="eta">7 min</div>
+                        <div class="distance">1.2 km away</div>
+                    </div>
+                </div>
+                <div class="bus-item">
+                    <div class="bus-info">
+                        <h4>Route G-4 - Hebbal → Silk Board</h4>
+                        <div class="bus-route">Via ORR, BTM Layout</div>
+                    </div>
+                    <div class="arrival-time">
+                        <div class="eta">12 min</div>
+                        <div class="distance">2.1 km away</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Recent Trips -->
+        <div class="recent-trips fade-in">
+            <h2 style="margin-bottom: 20px; color: #1e3c72;" id="recent-trips-title">Recent Trips</h2>
+            <div class="trip-item">
+                <div class="trip-details">
+                    <h4>Electronic City → Majestic</h4>
+                    <div class="trip-date">Today, 9:15 AM - Route 335E</div>
+                </div>
+            </div>
+            <div class="trip-item">
+                <div class="trip-details">
+                    <h4>Koramangala → Whitefield</h4>
+                    <div class="trip-date">Yesterday, 6:30 PM - Route 500D</div>
+                </div>
+            </div>
+            <div class="trip-item">
+                <div class="trip-details">
+                    <h4>JP Nagar → Hebbal</h4>
+                    <div class="trip-date">Aug 27, 2:45 PM - Route G-4</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modals -->
+    <div class="modal" id="schedule-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="schedule-modal-title">Bus Schedule</h3>
+                <button class="close-btn" onclick="hideModal('schedule-modal')">&times;</button>
+            </div>
+            <div>
+                <p id="schedule-coming-soon">Schedule feature coming soon.</p>
+            </div>
+        </div>
+    </div>
+    <div class="modal" id="help-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="help-modal-title">Help</h3>
+                <button class="close-btn" onclick="hideModal('help-modal')">&times;</button>
+            </div>
+            <div>
+                <p id="help-contact-text">For any queries or complaints, contact: <b>6290813559</b></p>
+                <textarea style="width:100%;height:80px;" placeholder="Type your message here..." id="help-textarea"></textarea>
+            </div>
+        </div>
+    </div>
+    <div class="notification" id="notification"></div>
+    <script>
+        // Language translations
+        const translations = {
+            en: {
+                "welcome": "Welcome, Commuter",
+                "quickActions": "Quick Actions",
+                "schedule": "Schedule",
+                "help": "Help",
+                "planJourney": "Plan Your Journey",
+                "from": "From",
+                "to": "To",
+                "departure": "Departure Time",
+                "searchRoutes": "🔍 Search Routes",
+                "fareCalc": "Fare Calculator",
+                "fareFrom": "From",
+                "fareTo": "To",
+                "fareType": "Bus Type",
+                "fareBtn": "Estimate Fare",
+                "liveTracking": "Live Bus Tracking",
+                "liveUpdates": "Live Updates",
+                "recentTrips": "Recent Trips",
+                "scheduleModalTitle": "Bus Schedule",
+                "scheduleComingSoon": "Schedule feature coming soon.",
+                "helpModalTitle": "Help",
+                "helpContactText": "For any queries or complaints, contact: <b>6290813559</b>"
+            },
+            hi: {
+                "welcome": "स्वागत है, यात्री",
+                "quickActions": "त्वरित क्रियाएँ",
+                "schedule": "समय सारणी",
+                "help": "सहायता",
+                "planJourney": "अपनी यात्रा की योजना बनाएं",
+                "from": "से",
+                "to": "तक",
+                "departure": "प्रस्थान समय",
+                "searchRoutes": "🔍 मार्ग खोजें",
+                "fareCalc": "किराया कैलकुलेटर",
+                "fareFrom": "से",
+                "fareTo": "तक",
+                "fareType": "बस प्रकार",
+                "fareBtn": "किराया अनुमानित करें",
+                "liveTracking": "लाइव बस ट्रैकिंग",
+                "liveUpdates": "लाइव अपडेट्स",
+                "recentTrips": "हाल की यात्राएँ",
+                "scheduleModalTitle": "बस समय सारणी",
+                "scheduleComingSoon": "समय सारणी सुविधा जल्द आ रही है।",
+                "helpModalTitle": "सहायता",
+                "helpContactText": "किसी भी प्रश्न या शिकायत के लिए संपर्क करें: <b>6290813559</b>"
+            },
+            pa: {
+                "welcome": "ਸੁਆਗਤ ਹੈ, ਯਾਤਰੀ",
+                "quickActions": "ਤੁਰੰਤ ਕਾਰਵਾਈਆਂ",
+                "schedule": "ਸਮਾਂ-ਸੂਚੀ",
+                "help": "ਮਦਦ",
+                "planJourney": "ਆਪਣੀ ਯਾਤਰਾ ਦੀ ਯੋਜਨਾ ਬਣਾਓ",
+                "from": "ਤੋਂ",
+                "to": "ਵੱਲ",
+                "departure": "ਰਵਾਨਗੀ ਸਮਾਂ",
+                "searchRoutes": "🔍 ਰੂਟ ਲੱਭੋ",
+                "fareCalc": "ਕਿਰਾਇਆ ਕੈਲਕੁਲੇਟਰ",
+                "fareFrom": "ਤੋਂ",
+                "fareTo": "ਵੱਲ",
+                "fareType": "ਬੱਸ ਕਿਸਮ",
+                "fareBtn": "ਕਿਰਾਇਆ ਅੰਦਾਜ਼ਾ ਲਵੋ",
+                "liveTracking": "ਲਾਈਵ ਬੱਸ ਟ੍ਰੈਕਿੰਗ",
+                "liveUpdates": "ਲਾਈਵ ਅੱਪਡੇਟਸ",
+                "recentTrips": "ਹਾਲੀਆ ਯਾਤਰਾਵਾਂ",
+                "scheduleModalTitle": "ਬੱਸ ਸਮਾਂ-ਸੂਚੀ",
+                "scheduleComingSoon": "ਸਮਾਂ-ਸੂਚੀ ਫੀਚਰ ਜਲਦੀ ਆ ਰਿਹਾ ਹੈ।",
+                "helpModalTitle": "ਮਦਦ",
+                "helpContactText": "ਕਿਸੇ ਵੀ ਸਵਾਲ ਜਾਂ ਸ਼ਿਕਾਇਤ ਲਈ ਸੰਪਰਕ ਕਰੋ: <b>6290813559</b>"
+            }
+        };
+        let currentLang = 'en';
+        function setLang(lang) {
+            currentLang = lang;
+            document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.remove('active'));
+            document.getElementById('lang-' + lang).classList.add('active');
+            document.getElementById('welcome-text').textContent = translations[lang].welcome;
+            document.getElementById('quick-actions-title').textContent = translations[lang].quickActions;
+            document.getElementById('schedule-label').textContent = translations[lang].schedule;
+            document.getElementById('help-label').textContent = translations[lang].help;
+            document.getElementById('plan-journey-title').textContent = translations[lang].planJourney;
+            document.getElementById('from-label').textContent = translations[lang].from;
+            document.getElementById('to-label').textContent = translations[lang].to;
+            document.getElementById('departure-label').textContent = translations[lang].departure;
+            document.getElementById('search-routes-btn').textContent = translations[lang].searchRoutes;
+            document.getElementById('fare-calc-title').textContent = translations[lang].fareCalc;
+            document.getElementById('fare-from-label').textContent = translations[lang].fareFrom;
+            document.getElementById('fare-to-label').textContent = translations[lang].fareTo;
+            document.getElementById('fare-type-label').textContent = translations[lang].fareType;
+            document.getElementById('fare-calc-btn').textContent = translations[lang].fareBtn;
+            document.getElementById('live-tracking-title').textContent = translations[lang].liveTracking;
+            document.getElementById('live-updates-label').textContent = translations[lang].liveUpdates;
+            document.getElementById('recent-trips-title').textContent = translations[lang].recentTrips;
+            document.getElementById('schedule-modal-title').textContent = translations[lang].scheduleModalTitle;
+            document.getElementById('schedule-coming-soon').textContent = translations[lang].scheduleComingSoon;
+            document.getElementById('help-modal-title').textContent = translations[lang].helpModalTitle;
+            document.getElementById('help-contact-text').innerHTML = translations[lang].helpContactText;
+        }
+        document.addEventListener('DOMContentLoaded', function() {
+            setLang('en');
+            const now = new Date();
+            document.getElementById('departure-time').value = now.toTimeString().slice(0, 5);
+            const observerOptions = { threshold: 0.1, rootMargin: '0px 0px -50px 0px' };
+            const observer = new IntersectionObserver(function(entries) {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.opacity = '1';
+                        entry.target.style.transform = 'translateY(0)';
+                    }
+                });
+            }, observerOptions);
+            document.querySelectorAll('.fade-in').forEach(el => {
+                el.style.opacity = '0';
+                el.style.transform = 'translateY(20px)';
+                el.style.transition = 'all 0.6s ease';
+                observer.observe(el);
+            });
+            setInterval(updateLiveTracking, 30000);
+        });
+        function searchRoutes() {
+            const from = document.getElementById('from').value;
+            const to = document.getElementById('to').value;
+            if (!from || !to) {
+                showNotification('Please enter both source and destination', 'error');
+                return;
+            }
+            const results = document.getElementById('route-results');
+            results.style.display = 'block';
+            const routes = [
+                {
+                    number: '335E',
+                    duration: '45 min',
+                    transfers: 0,
+                    steps: [
+                        'Board at ' + from,
+                        'Travel via Bannerghatta Road',
+                        'Alight at ' + to
+                    ]
+                },
+                {
+                    number: '201 → G-4',
+                    duration: '52 min',
+                    transfers: 1,
+                    steps: [
+                        'Board Route 201 at ' + from,
+                        'Transfer at Silk Board Junction',
+                        'Board Route G-4',
+                        'Alight at ' + to
+                    ]
+                }
+            ];
+            results.innerHTML = routes.map(route => `
+                <div class="route-card">
+                    <div class="route-header">
+                        <div class="route-info">
+                            <div class="route-badge">${route.number}</div>
+                            <div class="time-info">
+                                <strong>${route.duration}</strong>
+                                ${route.transfers > 0 ? ` • ${route.transfers} transfer(s)` : ' • Direct'}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="route-steps">
+                        ${route.steps.map((step, index) => `
+                            <div class="step-icon">${index + 1}</div>
+                            <div style="flex: 1;">${step}</div>
+                        `).join('')}
+                    </div>
+                </div>
+            `).join('');
+            showNotification('Routes found successfully!');
+        }
+        function calculateFare() {
+            const from = document.getElementById('fare-from').value.trim();
+            const to = document.getElementById('fare-to').value.trim();
+            const type = document.getElementById('fare-type').value;
+            if (!from || !to) {
+                document.getElementById('fare-result').textContent = "Please enter both source and destination.";
+                return;
+            }
+            // Simple estimation: base fare + per km (dummy logic)
+            let base = 10, perKm = 2;
+            if (type === 'ac') { base = 20; perKm = 3; }
+            if (type === 'volvo') { base = 30; perKm = 4; }
+            // Fake distance for demo
+            let distance = Math.max(3, Math.abs(from.length - to.length) + 5);
+            let fare = base + perKm * distance;
+            document.getElementById('fare-result').textContent = `Estimated Fare: ₹${fare} (${distance} km)`;
+        }
+        function showModal(modalId) {
+            document.getElementById(modalId).style.display = 'flex';
+        }
+        function hideModal(modalId) {
+            document.getElementById(modalId).style.display = 'none';
+        }
+        function toggleProfileMenu() {
+            showNotification('Profile menu clicked');
+        }
+        function showNotification(msg, type) {
+            const notification = document.getElementById('notification');
+            notification.textContent = msg;
+            notification.style.background = type === 'error' ? '#ef4444' : '#22c55e';
+            notification.classList.add('show');
+            setTimeout(() => notification.classList.remove('show'), 2500);
+        }
+        function updateLiveTracking() {
+            const busItems = document.querySelectorAll('.bus-item');
+            busItems.forEach(item => {
+                const etaElement = item.querySelector('.eta');
+                let currentEta = parseInt(etaElement.textContent);
+                if (currentEta > 1) {
+                    currentEta -= 1;
+                    etaElement.textContent = currentEta + ' min';
+                }
+            });
+        }
+    </script>
+</body>
+</html>
