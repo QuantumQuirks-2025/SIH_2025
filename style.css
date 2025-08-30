@@ -1,0 +1,439 @@
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: url('https://www.rajasthantourplanner.com/images/Amritsar-Monuments.jpg') no-repeat center center fixed;
+    background-size: cover;
+    color: #333;
+}
+.header {
+    background: transparent;
+    box-shadow: none;
+    position: absolute;
+    top: 15px;
+    width: 100%;
+    z-index: 1000;
+}
+.header-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+.user-info {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+.profile-pic {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.15);
+    border: 1px solid rgba(255,255,255,0.3);
+    backdrop-filter: blur(10px);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    font-size: 18px;
+}
+.profile-pic:hover {
+    transform: scale(1.1);
+    background: rgba(255,255,255,0.25);
+}
+.lang-toggle {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+.lang-btn {
+    background: #fff;
+    border: 1px solid #667eea;
+    color: #667eea;
+    border-radius: 6px;
+    padding: 5px 12px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: background 0.2s, color 0.2s;
+}
+.lang-btn.active, .lang-btn:hover {
+    background: #667eea;
+    color: #fff;
+}
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+    background: rgba(255,255,255,0.6);
+    border-radius: 16px;
+    box-shadow: 0 2px 15px rgba(0,0,0,0.08);
+}
+.quick-actions {
+    background: white;
+    border-radius: 12px;
+    padding: 25px;
+    margin-bottom: 25px;
+    box-shadow: 0 2px 15px rgba(0,0,0,0.08);
+}
+.quick-actions h2 {
+    margin-bottom: 20px;
+    color: #1e3c72;
+    font-size: 20px;
+}
+.actions-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 15px;
+}
+.action-card {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 20px;
+    border-radius: 10px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: none;
+    font-size: 14px;
+    text-decoration: none;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+}
+.action-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+}
+.action-icon {
+    font-size: 24px;
+    margin-bottom: 5px;
+}
+.bus-loader-overlay {
+    display: none;
+    position: fixed;
+    z-index: 3001;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(140, 187, 245, 0.85);
+    align-items: center;
+    justify-content: center;
+}
+.bus-loader {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.bus-svg {
+    width: 120px;
+    height: 60px;
+    margin-bottom: 10px;
+    animation: bus-move 1.5s linear infinite;
+}
+@keyframes bus-move {
+    0% { transform: translateX(-40px);}
+    50% { transform: translateX(40px);}
+    100% { transform: translateX(-40px);}
+}
+.bus-loader-text {
+    font-size: 18px;
+    color: #1e3c72;
+    font-weight: 600;
+    letter-spacing: 1px;
+}
+.gps-section {
+    background: white;
+    border-radius: 12px;
+    padding: 25px;
+    margin-bottom: 25px;
+    box-shadow: 0 2px 15px rgba(0,0,0,0.08);
+}
+.route-planner {
+    background: white;
+    border-radius: 12px;
+    padding: 25px;
+    margin-bottom: 25px;
+    box-shadow: 0 2px 15px rgba(0,0,0,0.08);
+}
+.route-form {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+}
+.form-group {
+    flex: 1;
+    min-width: 200px;
+}
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 500;
+    color: #555;
+}
+.form-group input, .form-group select {
+    width: 100%;
+    padding: 12px;
+    border: 2px solid #e1e5e9;
+    border-radius: 8px;
+    font-size: 14px;
+    transition: border-color 0.3s ease;
+}
+.form-group input:focus, .form-group select:focus {
+    outline: none;
+    border-color: #667eea;
+}
+.search-btn {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 12px 30px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    align-self: flex-end;
+    height: fit-content;
+}
+.search-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+}
+.route-results {
+    display: none;
+}
+.route-card {
+    background: #f8f9fa;
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 15px;
+    border-left: 4px solid #667eea;
+}
+.route-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
+}
+.route-info {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+}
+.route-badge {
+    background: #667eea;
+    color: white;
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+}
+.time-info {
+    font-size: 14px;
+    color: #666;
+}
+.route-steps {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+.step-icon {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background: #667eea;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+}
+.fare-calculator {
+    background: white;
+    border-radius: 12px;
+    padding: 25px;
+    margin-bottom: 25px;
+    box-shadow: 0 2px 15px rgba(0,0,0,0.08);
+}
+.fare-form {
+    display: flex;
+    gap: 15px;
+    flex-wrap: wrap;
+    margin-bottom: 15px;
+}
+.fare-result {
+    font-size: 18px;
+    color: #1e3c72;
+    font-weight: 600;
+    margin-top: 10px;
+}
+.live-tracking {
+    background: white;
+    border-radius: 12px;
+    padding: 25px;
+    margin-bottom: 25px;
+    box-shadow: 0 2px 15px rgba(0,0,0,0.08);
+}
+.tracking-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+.live-indicator {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: #22c55e;
+    font-weight: 600;
+}
+.live-dot {
+    width: 8px;
+    height: 8px;
+    background: #22c55e;
+    border-radius: 50%;
+    animation: pulse 2s infinite;
+}
+@keyframes pulse {
+    0% { opacity: 1; }
+    50% { opacity: 0.5; }
+    100% { opacity: 1; }
+}
+.bus-list {
+    display: grid;
+    gap: 15px;
+}
+.bus-item {
+    background: #f8f9fa;
+    border-radius: 8px;
+    padding: 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+.bus-item:hover {
+    background: #e9ecef;
+    transform: translateX(5px);
+}
+.bus-info h4 {
+    color: #1e3c72;
+    margin-bottom: 5px;
+}
+.bus-route {
+    color: #666;
+    font-size: 14px;
+}
+.arrival-time {
+    text-align: right;
+}
+.eta {
+    font-weight: 600;
+    color: #22c55e;
+    font-size: 18px;
+}
+.distance {
+    color: #666;
+    font-size: 12px;
+}
+.recent-trips {
+    background: white;
+    border-radius: 12px;
+    padding: 25px;
+    margin-bottom: 25px;
+    box-shadow: 0 2px 15px rgba(0,0,0,0.08);
+}
+.trip-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 0;
+    border-bottom: 1px solid #f0f0f0;
+}
+.trip-item:last-child {
+    border-bottom: none;
+}
+.trip-details h4 {
+    color: #1e3c72;
+    margin-bottom: 5px;
+}
+.trip-date {
+    color: #666;
+    font-size: 14px;
+}
+@media (max-width: 768px) {
+    .container {
+        padding: 15px;
+    }
+    .route-form, .fare-form {
+        flex-direction: column;
+    }
+    .actions-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+.fade-in {
+    animation: fadeInUp 0.6s ease-out;
+}
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.5);
+    backdrop-filter: blur(5px);
+    z-index: 2000;
+    align-items: center;
+    justify-content: center;
+}
+.modal-content {
+    background: white;
+    border-radius: 12px;
+    padding: 30px;
+    max-width: 500px;
+    width: 90%;
+    max-height: 80vh;
+    overflow-y: auto;
+}
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+.close-btn {
+    background: none;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    color: #666;
+}
+.notification {
+    position: fixed;
+    top: 100px;
+    right: 20px;
+    background: #22c55e;
+    color: white;
+    padding: 15px 20px;
+    border-radius: 8px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    transform: translateX(400px);
+    transition: transform 0.3s ease;
+    z-index: 3000;
+}
+.notification.show {
+    transform: translateX(0);
+}

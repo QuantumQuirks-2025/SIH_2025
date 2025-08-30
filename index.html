@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Namma BMTC - Commuter Dashboard</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Bus Loader Overlay -->
+    <div class="bus-loader-overlay" id="bus-loader">
+        <div class="bus-loader">
+            <svg class="bus-svg" viewBox="0 0 120 60">
+                <rect x="10" y="20" width="80" height="25" rx="8" fill="#667eea"/>
+                <rect x="90" y="28" width="18" height="17" rx="4" fill="#764ba2"/>
+                <circle cx="25" cy="50" r="7" fill="#222"/>
+                <circle cx="85" cy="50" r="7" fill="#222"/>
+                <rect x="20" y="25" width="15" height="10" rx="2" fill="#fff"/>
+                <rect x="40" y="25" width="15" height="10" rx="2" fill="#fff"/>
+                <rect x="60" y="25" width="15" height="10" rx="2" fill="#fff"/>
+            </svg>
+            <div class="bus-loader-text">Loading...</div>
+        </div>
+    </div>
+    <!-- Header -->
+    <header class="header">
+        <h1 style="text-align: center;">Welcome to Sadda Bus</h1>
+        
+        <div class="header-content">
+            <div class="lang-toggle">
+                <button class="lang-btn active" onclick="setLang('en')" id="lang-en">English</button>
+                <button class="lang-btn" onclick="setLang('hi')" id="lang-hi">हिन्दी</button>
+                <button class="lang-btn" onclick="setLang('pa')" id="lang-pa">ਪੰਜਾਬੀ</button>
+            </div>
+            <!-- Add this inside your <header> before or after .header-content as needed -->
+<div class="logo-section" style="display: flex; align-items: center; gap: 12px; margin-bottom: 10px;">
+    <img src="https://img.icons8.com/color/96/000000/bus.png" alt="Sadda Bus Logo" style="height:48px;width:48px;">
+    <span style="font-size: 2rem; font-weight: bold;font-family: Georgia, 'Times New Roman', Times, serif;text-align: left; color: #1e3c72;">Sadda Bus</span>
+</div>
+            <div class="user-info">
+                <span id="welcome-text">Welcome, Commuter</span>
+                <div class="profile-pic" onclick="toggleProfileMenu()">👤</div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <div class="container">
+        <!-- Quick Actions -->
+        <div class="quick-actions fade-in">
+            <h2 id="quick-actions-title">Quick Actions</h2>
+            <div class="actions-grid">
+                <button class="action-card" onclick="showModal('schedule-modal')">
+                    <div class="action-icon">⏰</div>
+                    <div id="schedule-label">Schedule</div>
+                </button>
+                <button class="action-card" onclick="showModal('help-modal')">
+                    <div class="action-icon">❓</div>
+                    <div id="help-label">Help</div>
+                </button>
+            </div>
+        </div>
+
+        <!-- GPS Section -->
+        <div class="gps-section fade-in">
+            <h2 style="margin-bottom: 20px; color: #1e3c72;">GPS Location</h2>
+            <button class="search-btn" onclick="getLocation()" style="margin-bottom:15px;">Show My Location</button>
+            <div id="gps-result" style="font-size:16px; color:#1e3c72; font-weight:500;"></div>
+            <div id="gps-map" style="margin-top:15px;"></div>
+        </div>
+
+        <!-- Route Planner -->
+        <div class="route-planner fade-in">
+            <h2 style="margin-bottom: 20px; color: #1e3c72;" id="plan-journey-title">Plan Your Journey</h2>
+            <div class="route-form">
+                <div class="form-group">
+                    <label for="from" id="from-label">From</label>
+                    <input type="text" id="from" placeholder="Enter source location" list="locations">
+                </div>
+                <div class="form-group">
+                    <label for="to" id="to-label">To</label>
+                    <input type="text" id="to" placeholder="Enter destination" list="locations">
+                </div>
+                <div class="form-group">
+                    <label for="departure-time" id="departure-label">Departure Time</label>
+                    <input type="time" id="departure-time">
+                </div>
+                <button class="search-btn" onclick="searchRoutes()" id="search-routes-btn">🔍 Search Routes</button>
+            </div>
+            <datalist id="locations">
+                <option value="Majestic Bus Station">
+                <option value="Electronic City">
+                <option value="Whitefield">
+                <option value="Koramangala">
+                <option value="HSR Layout">
+                <option value="Marathahalli">
+                <option value="Indiranagar">
+                <option value="JP Nagar">
+                <option value="BTM Layout">
+                <option value="Hebbal">
+                <option value="Banashankari">
+                <option value="Jayanagar">
+                <option value="KR Puram">
+                <option value="Silk Board">
+                <option value="Kempegowda International Airport">
+            </datalist>
+            <div class="route-results" id="route-results">
+                <!-- Routes will be populated here -->
+            </div>
+        </div>
+
+        <!-- Fare Calculator -->
+        <div class="fare-calculator fade-in">
+            <h2 style="margin-bottom: 20px; color: #1e3c72;" id="fare-calc-title">Fare Calculator</h2>
+            <div class="fare-form">
+                <div class="form-group">
+                    <label for="fare-from" id="fare-from-label">From</label>
+                    <input type="text" id="fare-from" placeholder="Enter source" list="locations">
+                </div>
+                <div class="form-group">
+                    <label for="fare-to" id="fare-to-label">To</label>
+                    <input type="text" id="fare-to" placeholder="Enter destination" list="locations">
+                </div>
+                <div class="form-group">
+                    <label for="fare-type" id="fare-type-label">Bus Type</label>
+                    <select id="fare-type">
+                        <option value="ordinary">Ordinary</option>
+                        <option value="ac">AC</option>
+                        <option value="volvo">Volvo</option>
+                    </select>
+                </div>
+                <button class="search-btn" onclick="calculateFare()" id="fare-calc-btn">Estimate Fare</button>
+            </div>
+            <div class="fare-result" id="fare-result"></div>
+        </div>
+
+        <!-- Live Tracking -->
+        <div class="live-tracking fade-in">
+            <div class="tracking-header">
+                <h2 style="color: #1e3c72;" id="live-tracking-title">Live Bus Tracking</h2>
+                <div class="live-indicator">
+                    <div class="live-dot"></div>
+                    <span id="live-updates-label">Live Updates</span>
+                </div>
+            </div>
+            <div class="bus-list">
+                <div class="bus-item">
+                    <div class="bus-info">
+                        <h4>Route 335E - Kempegowda Bus Station → Electronic City</h4>
+                        <div class="bus-route">Via Bannerghatta Road</div>
+                    </div>
+                    <div class="arrival-time">
+                        <div class="eta">3 min</div>
+                        <div class="distance">0.8 km away</div>
+                    </div>
+                </div>
+                <div class="bus-item">
+                    <div class="bus-info">
+                        <h4>Route 201 - Shivaji Nagar → Marathahalli</h4>
+                        <div class="bus-route">Via Indiranagar, Koramangala</div>
+                    </div>
+                    <div class="arrival-time">
+                        <div class="eta">7 min</div>
+                        <div class="distance">1.2 km away</div>
+                    </div>
+                </div>
+                <div class="bus-item">
+                    <div class="bus-info">
+                        <h4>Route G-4 - Hebbal → Silk Board</h4>
+                        <div class="bus-route">Via ORR, BTM Layout</div>
+                    </div>
+                    <div class="arrival-time">
+                        <div class="eta">12 min</div>
+                        <div class="distance">2.1 km away</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Recent Trips -->
+        <div class="recent-trips fade-in">
+            <h2 style="margin-bottom: 20px; color: #1e3c72;" id="recent-trips-title">Recent Trips</h2>
+            <div class="trip-item">
+                <div class="trip-details">
+                    <h4>Electronic City → Majestic</h4>
+                    <div class="trip-date">Today, 9:15 AM - Route 335E</div>
+                </div>
+            </div>
+            <div class="trip-item">
+                <div class="trip-details">
+                    <h4>Koramangala → Whitefield</h4>
+                    <div class="trip-date">Yesterday, 6:30 PM - Route 500D</div>
+                </div>
+            </div>
+            <div class="trip-item">
+                <div class="trip-details">
+                    <h4>JP Nagar → Hebbal</h4>
+                    <div class="trip-date">Aug 27, 2:45 PM - Route G-4</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modals -->
+    <div class="modal" id="schedule-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="schedule-modal-title">Bus Schedule</h3>
+                <button class="close-btn" onclick="hideModal('schedule-modal')">&times;</button>
+            </div>
+            <div>
+                <p id="schedule-coming-soon">Schedule feature coming soon.</p>
+            </div>
+        </div>
+    </div>
+    <div class="modal" id="help-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="help-modal-title">Help</h3>
+                <button class="close-btn" onclick="hideModal('help-modal')">&times;</button>
+            </div>
+            <div>
+                <p id="help-contact-text">For any queries or complaints, contact: <b>6290813559</b></p>
+                <textarea style="width:100%;height:80px;" placeholder="Type your message here..." id="help-textarea"></textarea>
+            </div>
+        </div>
+    </div>
+    <div class="notification" id="notification"></div>
+    <script src="script.js"></script>
+</body>
+</html>
